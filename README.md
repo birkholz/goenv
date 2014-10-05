@@ -3,7 +3,6 @@
 ## goenv ##
 * goenv is a simple tool that mimics python's virtualenv, for use in go projects.
 * Version 0.1
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### Set up ###
 
