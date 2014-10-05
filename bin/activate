@@ -98,6 +98,18 @@ deactivate () {
     unset GOPATH
     export PATH
     unset OLD_PATH
+    unset get_deps
+    unset install_sh
+    unset build
+    unset list_installables
+    unset install_to_system
+    unset make_install
+    unset uninstall_from_system
+    unset make_uninstall
+    unset list_buildable_folders
+    unset build_all
+    unset make_clean
+    unset deactivate
 }
 
 list_buildable_folders () {
