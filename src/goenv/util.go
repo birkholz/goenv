@@ -139,7 +139,7 @@ end
 
 
 function list_buildable_folders
-    find $GO_ENV -iname ` + "`" + `*.go` + "`" + ` | xargs -L 1 dirname $1 | sort -u
+    find $GO_ENV -iname '*.go' | xargs -L 1 dirname $1 | sort -u
 end
 
 
