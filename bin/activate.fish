@@ -1,61 +1,21 @@
-package main
-
-import (
-	"fmt"
-	"io/ioutil"
-	"os"
-)
-
-func Usage() {
-	fmt.Println("Usage: goenv [destination_folder]")
-}
-
-func EnsurePathExists(path string) {
-	os.MkdirAll(path, 0755)
-}
-
-func CheckIfExists(path string) bool {
-	if _, err := os.Stat(path) ; err != nil {
-		return ! os.IsNotExist(err)
-	} else {
-		return true
-	}
-}
-
-func CreateGoEnv(path string) {
-	if CheckIfExists(path) {
-		fmt.Println("Refreshing existing goenv in", path)
-	} else {
-		fmt.Println("Creating new goenv in", path)
-	}
-	EnsurePathExists(path)
-	binPath := fmt.Sprintf("%s/bin", path)
-	EnsurePathExists(binPath)
-	WriteActivateScript(binPath, path)
-	EnsurePathExists(fmt.Sprintf("%s/pkg", path))
-	EnsurePathExists(fmt.Sprintf("%s/src", path))
-}
-
-func WriteActivateScript(binPath string, path string) {
-
-	activateFishScript := `# This file must be used with "source bin/activate.fish" *from fish* (http://fishshell.com)
+# This file must be used with "source bin/activate.fish" *from fish* (http://fishshell.com)
 # you cannot run it directly
 
-set -x PARENT_PATH ` + path + `
+set -x PARENT_PATH (dirname (dirname (status -f)))
 
 if test -z $GO_ENV
-    set -gx GO_ENV $PARENT_PATH
+    set -g GO_ENV $PARENT_PATH
     echo "Activating goenv in $GO_ENV"
     set -Ux GOPATH $GO_ENV
-    set -gx BIN_PATH "$GOPATH/bin"
-    set -gx OLD_PATH $PATH
+    set -g BIN_PATH "$GOPATH/bin"
+    set -g OLD_PATH $PATH
     set PATH $PATH $BIN_PATH
 else if test $GO_ENV != $PARENT_PATH
-    set -gx GO_ENV $PARENT_PATH
+    set -g GO_ENV $PARENT_PATH
     echo "Switching to goenv in $GO_ENV"
     set -Ux GOPATH $GO_ENV
 
-    set -gx BIN_PATH "$GOPATH/bin"
+    set -g BIN_PATH "$GOPATH/bin"
     set PATH $OLD_PATH $BIN_PATH
 else
     echo "Already activated goenv in $GO_ENV"
@@ -139,7 +99,7 @@ end
 
 
 function list_buildable_folders
-    find $GO_ENV -iname ` + "`" + `*.go` + "`" + ` | xargs -L 1 dirname $1 | sort -u
+    find $GO_ENV -iname '*.go' | xargs -L 1 dirname $1 | sort -u
 end
 
 
@@ -160,7 +120,3 @@ function make_clean
         rm $BIN_PATH/$installable
     end
 end
-`
-	ioutil.WriteFile(fmt.Sprintf("%s/activate", binPath), []byte(activateScript), 0755)
-	ioutil.WriteFile(fmt.Sprintf("%s/activate.fish", binPath), []byte(activateFishScript), 0755)
-}
