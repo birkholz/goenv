@@ -1,5 +1,7 @@
 # README #
 
+forked from https://bitbucket.org/fernandosanchezjr/goenv
+
 ## goenv ##
 * goenv is a simple tool that mimics python's virtualenv, for use in go projects.
 * Version 0.1
